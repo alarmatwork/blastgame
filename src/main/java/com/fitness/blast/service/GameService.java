@@ -21,8 +21,8 @@ public class GameService {
     public Game registerGame(User user1, User user2) {
 
         Optional<Game> existingGame = findGameBetweenUsers(user1, user2);
-        if (existingGame.isPresent()){
-            log.info("Returning existing game"+ existingGame.get());
+        if (existingGame.isPresent()) {
+            log.info("Returning existing game" + existingGame.get());
             return existingGame.get();
         }
 
@@ -39,7 +39,7 @@ public class GameService {
         if (gameOfUser1.isPresent()) {
             log.info("Updating User1 points");
             isPointCollected(lat, lon, gameOfUser1.get().getUser1Points());
-        } else if (gameOfUser2.isPresent()){
+        } else if (gameOfUser2.isPresent()) {
             log.info("Updating User2 points");
             isPointCollected(lat, lon, gameOfUser2.get().getUser2Points());
 
@@ -50,7 +50,6 @@ public class GameService {
         return gameOfUser1.get();
 
     }
-
 
 
     public void addPointToMap(User user, Point point) {
@@ -78,6 +77,7 @@ public class GameService {
         }
 
     }
+
     private Optional<Game> findGameForUser1(User user) {
         return activeGames.stream().filter(game -> game.getUser1().equals(user)).findFirst();
     }
@@ -86,7 +86,7 @@ public class GameService {
         return activeGames.stream().filter(game -> game.getUser2().equals(user)).findFirst();
     }
 
-    public Optional<Game> findGameBetweenUsers(User user1, User user2){
+    public Optional<Game> findGameBetweenUsers(User user1, User user2) {
 
         Optional<Game> result = activeGames.stream().filter(game -> {
             String uid = game.getUsersIdentifier();
@@ -108,16 +108,16 @@ public class GameService {
 
     private void isPointCollected(Double lat, Double lon, Set<Point> points) {
         points.stream().forEach(point -> {
-            checkPointInRadius(point, lat, lon);
-        }
+                    checkPointInRadius(point, lat, lon);
+                }
         );
     }
 
-    private void checkPointInRadius(Point point, Double lat, Double lon){
+    private void checkPointInRadius(Point point, Double lat, Double lon) {
 
         float dist = distFrom(point.getLatitude(), point.getLongitude(), lat, lon);
-        log.info("Distance between: " +dist);
-        if (dist < RADIUS_FROM_POINT){
+        log.info("Distance between: " + dist);
+        if (dist < RADIUS_FROM_POINT) {
             point.setCollected(true);
         }
 
@@ -125,12 +125,12 @@ public class GameService {
 
     public static float distFrom(double lat1, double lng1, double lat2, double lng2) {
         double earthRadius = 6371000; //meters
-        double dLat = Math.toRadians(lat2-lat1);
-        double dLng = Math.toRadians(lng2-lng1);
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLng/2) * Math.sin(dLng/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         float dist = (float) (earthRadius * c);
 
         return dist;

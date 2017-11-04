@@ -22,6 +22,9 @@ public class Game {
     }
 
     public String getUsersIdentifier(){
+        if (isWaiting()) {
+            return "...";
+        }
         return user1.getId().toString() + getUser2().getId().toString();
 
     }
