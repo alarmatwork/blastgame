@@ -13,6 +13,6 @@ public class User {
     private String gpsLatitude;
     private String gpsLongitude;
     private String location;
-    private long points = 0;
+    private long rewardPoints = 0;
     private boolean isAvailable = true;
 }

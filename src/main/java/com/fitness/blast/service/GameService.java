@@ -37,10 +37,10 @@ public class GameService {
         Optional<Game> gameOfUser2 = findGameForUser2(user);
 
         if (gameOfUser1.isPresent()) {
-            log.info("Updating User1 points");
+            log.info("Updating User1 rewardPoints");
             isPointCollected(lat, lon, gameOfUser1.get().getUser1Points());
         } else if (gameOfUser2.isPresent()) {
-            log.info("Updating User2 points");
+            log.info("Updating User2 rewardPoints");
             isPointCollected(lat, lon, gameOfUser2.get().getUser2Points());
 
             return gameOfUser2.get();
