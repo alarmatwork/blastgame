@@ -17,6 +17,10 @@ public class Game {
     private Set<Point> user1Points;
     private Set<Point> user2Points;
 
+    public Game(){
+        //empty game with:
+        //waiting == true
+    }
     public boolean isWaiting(){
         return user1 == null || user2 == null;
     }

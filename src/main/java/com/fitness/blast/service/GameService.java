@@ -45,14 +45,14 @@ public class GameService {
 
             return gameOfUser2.get();
         } else {
-            throw new RuntimeException("Game not found for user: " + user);
+            return new Game(); // Special game placholder with Waiting==true
         }
         return gameOfUser1.get();
 
     }
 
 
-    public void addPointToMap(User user, Point point) {
+    public Game addPointToMap(User user, Point point) {
         Optional<Game> gameOfUser1 = findGameForUser1(user);
         Optional<Game> gameOfUser2 = findGameForUser2(user);
 
@@ -63,6 +63,7 @@ public class GameService {
             if (opponentPoints.size() == 3) {
                 opponentPoints.add(generateRandomPoint(gameOfUser1.get().getUser2(), opponentPoints));
             }
+            return gameOfUser1.get();
 
         } else if (gameOfUser2.isPresent()) {
             Set<Point> opponentPoints = gameOfUser2.get().getUser1Points();
@@ -71,19 +72,32 @@ public class GameService {
             if (opponentPoints.size() == 3) {
                 opponentPoints.add(generateRandomPoint(gameOfUser2.get().getUser1(), opponentPoints));
             }
+            return gameOfUser1.get();
 
         } else {
             throw new RuntimeException("Can not find game for the user: " + user);
         }
-
     }
 
     private Optional<Game> findGameForUser1(User user) {
-        return activeGames.stream().filter(game -> game.getUser1().equals(user)).findFirst();
+        return activeGames.stream().filter(game -> {
+            log.info("User:" + user);
+            log.info("Finding user1: " + user.getId() + " from Game: " + game);
+            log.info("User1 found:" + game.getUser1());
+            return game.getUser1().equals(user);
+        }).findFirst();
     }
 
     private Optional<Game> findGameForUser2(User user) {
-        return activeGames.stream().filter(game -> game.getUser2().equals(user)).findFirst();
+        return activeGames.stream().filter(game ->
+                {
+                    log.info("User:" + user);
+                    log.info("Finding user2: " + user.getId() + " from Game: " + game);
+                    log.info("User2 found:" + game.getUser2());
+                    return game.getUser2().equals(user);
+
+                }
+        ).findFirst();
     }
 
     public Optional<Game> findGameBetweenUsers(User user1, User user2) {

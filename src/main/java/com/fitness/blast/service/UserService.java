@@ -52,7 +52,8 @@ public class UserService {
     }
 
     public User findUser(String userId) {
-        return registeredUsers.get(userId);
+        log.info("Currently Registered Users: " + registeredUsers);
+        return registeredUsers.get(UUID.fromString(userId));
     }
 
     public void makeAMove(String id, int x, int y) {
