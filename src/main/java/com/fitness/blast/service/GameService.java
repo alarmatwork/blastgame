@@ -72,7 +72,8 @@ public class GameService {
             if (opponentPoints.size() == 3) {
                 opponentPoints.add(generateRandomPoint(gameOfUser2.get().getUser1(), opponentPoints));
             }
-            return gameOfUser1.get();
+
+            return gameOfUser2.get();
 
         } else {
             throw new RuntimeException("Can not find game for the user: " + user);
