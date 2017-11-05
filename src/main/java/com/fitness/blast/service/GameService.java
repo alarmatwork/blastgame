@@ -65,7 +65,9 @@ public class GameService {
     }
 
     private void isGameOver(Game game) {
+
         if (game.getUser1Points().size() < 2 || game.getUser2Points().size() < 2) {
+            log.info("Not enought points. User1 has: " + game.getUser1Points().size() + "and User2 has: " + game.getUser2Points().size());
             return;
         }
 
@@ -152,7 +154,9 @@ public class GameService {
     private void isPointCollected(Double lat, Double lon, Set<Point> points) {
         points.stream().forEach(point -> {
                     boolean isPointCollected = checkPointInRadius(point, lat, lon);
-                    point.setCollected(isPointCollected);
+                    if (isPointCollected) {
+                        point.setCollected(isPointCollected);
+                    }
                     log.info("Is COLLECTED: " + isPointCollected);
                 }
         );
@@ -182,31 +186,31 @@ public class GameService {
 
         return dist;
     }
-    
-    
-	public String getPointMessage(double latitude, double longitude) {
 
-		StringBuilder descSB = new StringBuilder();
 
-		// try with wiki
-		List<WikiResponseDto> wikiResponse = this.wikipediaApi.getNearbyPOIs(latitude, longitude);
-		if (wikiResponse != null && wikiResponse.size() > 0) {
+    public String getPointMessage(double latitude, double longitude) {
 
-			WikiResponseDto firstWiki = wikiResponse.get(0);
-			descSB.append(firstWiki.getTitle());
-		}
+        StringBuilder descSB = new StringBuilder();
 
-		// try with copernicus
-		String copernicusUrbanResponse = this.copernicusApiService.getUrbanizationLayer(latitude, longitude);
-		if (copernicusUrbanResponse != null && copernicusUrbanResponse.length() > 2) {
-			descSB.append(copernicusUrbanResponse.trim());
-		}
+        // try with wiki
+        List<WikiResponseDto> wikiResponse = this.wikipediaApi.getNearbyPOIs(latitude, longitude);
+        if (wikiResponse != null && wikiResponse.size() > 0) {
 
-		if (descSB.length() > 1) {
-			return "Info: " + descSB.toString();
-		}
+            WikiResponseDto firstWiki = wikiResponse.get(0);
+            descSB.append(firstWiki.getTitle());
+        }
 
-		return "";
-	}
+        // try with copernicus
+        String copernicusUrbanResponse = this.copernicusApiService.getUrbanizationLayer(latitude, longitude);
+        if (copernicusUrbanResponse != null && copernicusUrbanResponse.length() > 2) {
+            descSB.append(copernicusUrbanResponse.trim());
+        }
+
+        if (descSB.length() > 1) {
+            return "Info: " + descSB.toString();
+        }
+
+        return "";
+    }
 
 }
