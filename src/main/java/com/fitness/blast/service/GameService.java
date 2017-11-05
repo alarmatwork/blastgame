@@ -6,10 +6,7 @@ import com.fitness.blast.dao.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -26,7 +23,7 @@ public class GameService {
             return existingGame.get();
         }
 
-        Game newGame = new Game(UUID.randomUUID(), user1, user2, new HashSet<>(), new HashSet<>());
+        Game newGame = new Game(UUID.randomUUID(), user1, user2, new HashSet<>(), new HashSet<>(), false);
         activeGames.add(newGame);
         log.info("Registered  new game: " + newGame);
         return newGame;
@@ -38,45 +35,63 @@ public class GameService {
 
         if (gameOfUser1.isPresent()) {
             log.info("Updating User1 rewardPoints");
-            isPointCollected(lat, lon, gameOfUser1.get().getUser1Points());
+            Set<Point> user1Points = gameOfUser1.get().getUser1Points();
+            isPointCollected(lat, lon, user1Points);
+            isGameOver(gameOfUser1.get());
+            return gameOfUser1.get();
         } else if (gameOfUser2.isPresent()) {
             log.info("Updating User2 rewardPoints");
             isPointCollected(lat, lon, gameOfUser2.get().getUser2Points());
+            isGameOver(gameOfUser2.get());
 
             return gameOfUser2.get();
         } else {
             return new Game(); // Special game placholder with Waiting==true
         }
-        return gameOfUser1.get();
+    }
 
+    private void isGameOver(Game game) {
+        if (game.getUser1Points().size() < 3 || game.getUser2Points().size() <3){
+            return;
+        }
+
+        if (game.getUser1Points().stream().filter(point -> point.isCollected()).count() == game.getUser1Points().size()){
+            game.setGameOver(true);
+            game.getUser1().setWinner(true);
+        }
+
+        if (game.getUser2Points().stream().filter(point -> point.isCollected()).count() == game.getUser2Points().size()){
+            game.setGameOver(true);
+            game.getUser2().setWinner(true);
+        }
     }
 
 
-    public Game addPointToMap(User user, Point point) {
-        Optional<Game> gameOfUser1 = findGameForUser1(user);
-        Optional<Game> gameOfUser2 = findGameForUser2(user);
+    public Game addPointToOpponentMap(User opponent, Point point) {
+        Optional<Game> gameOfUser1 = findGameForUser1(opponent);
+        Optional<Game> gameOfUser2 = findGameForUser2(opponent);
 
         if (gameOfUser1.isPresent()) {
             Set<Point> opponentPoints = gameOfUser1.get().getUser2Points();
             opponentPoints.add(point);
-
-            if (opponentPoints.size() == 3) {
-                opponentPoints.add(generateRandomPoint(gameOfUser1.get().getUser2(), opponentPoints));
-            }
+//TODO:
+//            if (opponentPoints.size() == 3) {
+//                opponentPoints.add(generateRandomPoint(gameOfUser1.get().getUser2(), opponentPoints));
+//            }
             return gameOfUser1.get();
 
         } else if (gameOfUser2.isPresent()) {
             Set<Point> opponentPoints = gameOfUser2.get().getUser1Points();
             opponentPoints.add(point);
-
-            if (opponentPoints.size() == 3) {
-                opponentPoints.add(generateRandomPoint(gameOfUser2.get().getUser1(), opponentPoints));
-            }
+//TODO:
+//            if (opponentPoints.size() == 3) {
+//                opponentPoints.add(generateRandomPoint(gameOfUser2.get().getUser1(), opponentPoints));
+//            }
 
             return gameOfUser2.get();
 
         } else {
-            throw new RuntimeException("Can not find game for the user: " + user);
+            throw new RuntimeException("Can not find game for the user: " + opponent);
         }
     }
 

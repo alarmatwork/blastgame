@@ -37,7 +37,7 @@ public class ApiController {
 
         UUID id = UUID.randomUUID();
 
-        User newUser = new User(id, name, latitude, longitude, location, 0, true);
+        User newUser = new User(id, name, latitude, longitude, location, 0, true,false);
         userService.register(newUser);
         User opponent = userService.getOpponent(newUser.getId().toString());
         if (opponent == null) {
@@ -71,7 +71,7 @@ public class ApiController {
         if (user == null){
             throw new UserNotFoundException("User not found: " + userId);
         }
-        gameService.addPointToMap(user, point);
+        gameService.addPointToOpponentMap(user, point);
 
         return "OK";
     }
@@ -90,6 +90,7 @@ public class ApiController {
             throw new UserNotFoundException("User not found for ID:" + userId);
         }
 
-        return gameService.ping(user, latitude, longitude);
+        Game game = gameService.ping(user, latitude, longitude);
+        return game.setSortingOwner(user);
     }
 }
