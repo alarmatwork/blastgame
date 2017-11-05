@@ -11,8 +11,8 @@ class UserServiceSpec extends Specification {
 
         def "GetOpponent for regular case of two registered users"() {
             given:
-                User user1 = new User(UUID.randomUUID(), "First User","59.1", "57.34","Estonia, Tart", 0, true)
-                User user2 = new User(UUID.randomUUID(), "Second User","52.1", "17.34","Estonia, Tart", 0, true)
+                User user1 = new User(UUID.randomUUID(), "First User","59.1", "57.34","Estonia, Tart", 0, true, false)
+                User user2 = new User(UUID.randomUUID(), "Second User","52.1", "17.34","Estonia, Tart", 0, true, false)
                 service.register(user1)
                 service.register(user2)
 
@@ -26,7 +26,7 @@ class UserServiceSpec extends Specification {
 
     def "GetOpponent with only one user"() {
         given:
-            User user1 = new User(UUID.randomUUID(), "First User", "59.1", "57.34", "Estonia, Tart", 0, true)
+            User user1 = new User(UUID.randomUUID(), "First User", "59.1", "57.34", "Estonia, Tart", 0, true, false)
             service.register(user1)
 
         when:
@@ -41,8 +41,8 @@ class UserServiceSpec extends Specification {
 
     def "GetOpponent when two users fregistered and if we get opponent then we should mark both as not available"() {
         given:
-            User user1 = new User(UUID.randomUUID(), "Peeter","59.1", "57.34","Estonia, Tart", 0, true)
-            User user2 = new User(UUID.randomUUID(), "Mait","52.1", "17.34","Estonia, Tart", 0, true)
+            User user1 = new User(UUID.randomUUID(), "Peeter","59.1", "57.34","Estonia, Tart", 0, true, false)
+            User user2 = new User(UUID.randomUUID(), "Mait","52.1", "17.34","Estonia, Tart", 0, true, false)
             service.register(user1)
             service.register(user2)
 

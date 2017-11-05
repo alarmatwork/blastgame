@@ -4,8 +4,8 @@ import com.fitness.blast.UserNotFoundException;
 import com.fitness.blast.dao.Game;
 import com.fitness.blast.dao.Point;
 import com.fitness.blast.dao.User;
-import com.fitness.blast.integrations.WikipediaApi;
-import com.fitness.blast.integrations.wiki.dto.WikiResponseDto;
+//import com.fitness.blast.integrations.WikipediaApi;
+//import com.fitness.blast.integrations.wiki.dto.WikiResponseDto;
 import com.fitness.blast.service.GameService;
 import com.fitness.blast.service.UserService;
 
@@ -32,8 +32,8 @@ public class ApiController {
     @Autowired
     GameService gameService;
     
-    @Autowired
-    private WikipediaApi wikipediaApi;
+//    @Autowired
+//    private WikipediaApi wikipediaApi;
 
     @RequestMapping(value = "/user/register", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -104,14 +104,15 @@ public class ApiController {
     }
     
     
-    @RequestMapping(value = "/wikipedia", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public List<WikiResponseDto> wikipedia(
-            @ApiParam(value = "Latitude", required = true) @RequestParam(value = "latitude", defaultValue = "") Double latitude,
-            @ApiParam(value = "Longitude", required = true) @RequestParam(value = "longitude", defaultValue = "") Double longitude,
-            HttpServletRequest request) {
+//    @RequestMapping(value = "/wikipedia", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseBody
+//    public List<WikiResponseDto> wikipedia(
+//            @ApiParam(value = "Latitude", required = true) @RequestParam(value = "latitude", defaultValue = "") Double latitude,
+//            @ApiParam(value = "Longitude", required = true) @RequestParam(value = "longitude", defaultValue = "") Double longitude,
+//            HttpServletRequest request) {
+//
+//		return this.wikipediaApi.getNearbyPOIs(latitude, longitude);
+//
+//	}
 
-		return this.wikipediaApi.getNearbyPOIs(latitude, longitude);
-
-	}
 }
