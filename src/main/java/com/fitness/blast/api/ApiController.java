@@ -134,14 +134,19 @@ public class ApiController {
 
 
 
-    @RequestMapping(value = "/copernicus", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/info", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String copernicus(
+    public Map info(
             @ApiParam(value = "Latitude", required = true) @RequestParam(value = "latitude", defaultValue = "") Double latitude,
             @ApiParam(value = "Longitude", required = true) @RequestParam(value = "longitude", defaultValue = "") Double longitude,
             HttpServletRequest request) {
 
-        return this.copernicusApiService.getUrbanizationLayer(latitude, longitude);
-    }
+		String message = this.gameService.getPointMessage(latitude, longitude);
+
+		Map response = new HashMap<String, String>();
+		response.put("message", message);
+
+		return response;
+	}
 
 }
