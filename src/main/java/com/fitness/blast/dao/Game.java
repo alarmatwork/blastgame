@@ -48,7 +48,11 @@ public class Game {
 
     public User getOpponent(){
 
-        if (user1 != null && user1.equals(currentOwner)){
+        return getOpponentUser(currentOwner);
+    }
+
+    public User getOpponentUser(User user) {
+        if (user1 != null && user1.equals(user)){
             return user2;
         } else {
             return user1;
@@ -79,6 +83,7 @@ public class Game {
         return user1 == null || user2 == null;
     }
 
+    @JsonIgnore
     public String getUsersIdentifier(){
         if (isWaiting()) {
             return "...";

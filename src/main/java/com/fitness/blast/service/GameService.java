@@ -66,33 +66,39 @@ public class GameService {
         }
     }
 
-
-    public Game addPointToOpponentMap(User opponent, Point point) {
-        Optional<Game> gameOfUser1 = findGameForUser1(opponent);
-        Optional<Game> gameOfUser2 = findGameForUser2(opponent);
-
-        if (gameOfUser1.isPresent()) {
-            Set<Point> opponentPoints = gameOfUser1.get().getUser2Points();
-            opponentPoints.add(point);
-//TODO:
-//            if (opponentPoints.size() == 3) {
-//                opponentPoints.add(generateRandomPoint(gameOfUser1.get().getUser2(), opponentPoints));
-//            }
+    private Game findUserGame(User user){
+        Optional<Game> gameOfUser1 = findGameForUser1(user);
+        if (gameOfUser1.isPresent()){
             return gameOfUser1.get();
-
-        } else if (gameOfUser2.isPresent()) {
-            Set<Point> opponentPoints = gameOfUser2.get().getUser1Points();
-            opponentPoints.add(point);
-//TODO:
-//            if (opponentPoints.size() == 3) {
-//                opponentPoints.add(generateRandomPoint(gameOfUser2.get().getUser1(), opponentPoints));
-//            }
-
-            return gameOfUser2.get();
-
-        } else {
-            throw new RuntimeException("Can not find game for the user: " + opponent);
         }
+
+        Optional<Game> gameOfUser2 = findGameForUser2(user);
+        if (gameOfUser2.isPresent()){
+            return  gameOfUser2.get();
+        }
+
+        throw new RuntimeException("Game not found for user: "+user);
+
+    }
+
+
+
+    public Game addPointToOpponentMap(User pointGiver, Point point) {
+
+        Game game = findUserGame(pointGiver);
+        game.setCurrentOwner(pointGiver);
+
+        User opponent = game.getOpponentUser(pointGiver);
+        Set<Point> opponentPoints = game.getOpponentPoints();
+
+        point.setOwner(opponent);
+        opponentPoints.add(point);
+//TODO:
+//       if (opponentPoints.size() == 3) {
+//          opponentPoints.add(generateRandomPoint(gameOfUser1.get().getUser2(), opponentPoints));
+//       }
+
+        return game;
     }
 
     private Optional<Game> findGameForUser1(User user) {

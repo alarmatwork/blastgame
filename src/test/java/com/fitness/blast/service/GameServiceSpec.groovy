@@ -11,8 +11,8 @@ class GameServiceSpec extends Specification {
 
     def "Ping test"() {
         given:
-        User user1 = new User(UUID.randomUUID(), "Tasku User", "58.377625", "26.729006", "Estonia, Tartu, Tasku", 0, true)
-        User user2 = new User(UUID.randomUUID(), "Tamme Staadion", "58.366816", "26.713064", "Estonia, Tart", 0, true)
+        User user1 = new User(UUID.randomUUID(), "Tasku User", "58.377625", "26.729006", "Estonia, Tartu, Tasku", 0, true,false)
+        User user2 = new User(UUID.randomUUID(), "Tamme Staadion", "58.366816", "26.713064", "Estonia, Tart", 0, true, false)
 
         service.register(user1)
         service.register(user2)
