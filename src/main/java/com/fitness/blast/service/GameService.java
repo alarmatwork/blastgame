@@ -197,27 +197,32 @@ public class GameService {
 	public String getPointMessage(double latitude, double longitude) {
 
 		StringBuilder descSB = new StringBuilder();
+		
+		// try with copernicus
+		String copernicusUrbanResponse = this.copernicusApiService.getUrbanizationLayer(latitude, longitude);
+		if (copernicusUrbanResponse != null && copernicusUrbanResponse.length() > 2) {
+			descSB.append(copernicusUrbanResponse.trim());
+		}
+
 
 		// try with wiki
 		List<WikiResponseDto> wikiResponse = this.wikipediaApi.getNearbyPOIs(latitude, longitude);
 		if (wikiResponse != null && wikiResponse.size() > 0) {
 			
 			try {
+				
+				if (descSB.length() > 0) {
+					descSB.append("\n");
+				}
+				
 				int randomElementIndex = this.randInt(0, wikiResponse.size() - 1);
 
 				WikiResponseDto firstWiki = wikiResponse.get(randomElementIndex);
 				descSB.append(firstWiki.getTitle());
-				descSB.append("\n");
 			} catch (Exception e) {
 				log.error("Wiki exception", e);
 			}
 			
-		}
-
-		// try with copernicus
-		String copernicusUrbanResponse = this.copernicusApiService.getUrbanizationLayer(latitude, longitude);
-		if (copernicusUrbanResponse != null && copernicusUrbanResponse.length() > 2) {
-			descSB.append(copernicusUrbanResponse.trim());
 		}
 
 		if (descSB.length() > 1) {
