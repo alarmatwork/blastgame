@@ -33,6 +33,9 @@ public class GameService {
         Optional<Game> gameOfUser1 = findGameForUser1(user);
         Optional<Game> gameOfUser2 = findGameForUser2(user);
 
+        user.setLastLatitude(lat.toString());
+        user.setLastLongitude(lon.toString());
+
         if (gameOfUser1.isPresent()) {
             log.info("Updating User1 rewardPoints");
             Set<Point> user1Points = gameOfUser1.get().getUser1Points();

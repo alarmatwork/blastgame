@@ -85,6 +85,8 @@ public class ApiController {
         if (user == null){
             throw new UserNotFoundException("User not found: " + userId);
         }
+
+        point.setMessage("Urban area");
         gameService.addPointToOpponentMap(user, point);
 
         return point.getMessage();
