@@ -20,7 +20,8 @@ class BlasterExceptionHandler {
 
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<Object> handleUserNotFound(UserNotFoundException ex) {
-		return renderExceptionAsError(HttpStatus.BAD_REQUEST, ex, ex.getMessage());
+		log.error(ex.getMessage());
+		return ResponseEntity.badRequest().body(ex.getMessage());
 	}
 
 	@ExceptionHandler(Exception.class)

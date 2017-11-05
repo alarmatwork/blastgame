@@ -33,7 +33,7 @@ public class Game {
     @JsonIgnore
     private Set<Point> user2Points;
     @NonNull
-    private boolean gameOver;
+    private Boolean gameOver;
 
     private User currentOwner;
 

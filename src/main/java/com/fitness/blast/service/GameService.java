@@ -103,9 +103,6 @@ public class GameService {
 
     private Optional<Game> findGameForUser1(User user) {
         return activeGames.stream().filter(game -> {
-            log.info("User:" + user);
-            log.info("Finding user1: " + user.getId() + " from Game: " + game);
-            log.info("User1 found:" + game.getUser1());
             return game.getUser1().equals(user);
         }).findFirst();
     }
@@ -113,9 +110,6 @@ public class GameService {
     private Optional<Game> findGameForUser2(User user) {
         return activeGames.stream().filter(game ->
                 {
-                    log.info("User:" + user);
-                    log.info("Finding user2: " + user.getId() + " from Game: " + game);
-                    log.info("User2 found:" + game.getUser2());
                     return game.getUser2().equals(user);
 
                 }
