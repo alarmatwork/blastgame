@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -75,7 +77,7 @@ public class ApiController {
 
     @RequestMapping(value = "/add/point", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String addPoint(
+    public Map addPoint(
             @ApiParam(value = "userId", required = true) @RequestParam(value = "userId", defaultValue = "") String userId,
             @ApiParam(value = "Latitude", required = true) @RequestParam(value = "latitude", defaultValue = "") double latitude,
             @ApiParam(value = "Longitude", required = true) @RequestParam(value = "longitude", defaultValue = "") double longitude,
@@ -94,7 +96,9 @@ public class ApiController {
         // add info to point
 		point.setMessage(this.gameService.getPointMessage(point.getLatitude(), point.getLongitude()));
 
-        return point.getMessage();
+        Map hashMap = new HashMap();
+        hashMap.put("message", point.getMessage());
+        return hashMap;
     }
 
     @RequestMapping(value = "/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
