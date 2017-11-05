@@ -65,36 +65,35 @@ public class GameService {
     }
 
     private void isGameOver(Game game) {
-        if (game.getUser1Points().size() < 3 || game.getUser2Points().size() <3){
+        if (game.getUser1Points().size() < 2 || game.getUser2Points().size() < 2) {
             return;
         }
 
-        if (game.getUser1Points().stream().filter(point -> point.isCollected()).count() == game.getUser1Points().size()){
+        if (game.getUser1Points().stream().filter(point -> point.isCollected()).count() == game.getUser1Points().size()) {
             game.setGameOver(true);
             game.getUser1().setWinner(true);
         }
 
-        if (game.getUser2Points().stream().filter(point -> point.isCollected()).count() == game.getUser2Points().size()){
+        if (game.getUser2Points().stream().filter(point -> point.isCollected()).count() == game.getUser2Points().size()) {
             game.setGameOver(true);
             game.getUser2().setWinner(true);
         }
     }
 
-    private Game findUserGame(User user){
+    private Game findUserGame(User user) {
         Optional<Game> gameOfUser1 = findGameForUser1(user);
-        if (gameOfUser1.isPresent()){
+        if (gameOfUser1.isPresent()) {
             return gameOfUser1.get();
         }
 
         Optional<Game> gameOfUser2 = findGameForUser2(user);
-        if (gameOfUser2.isPresent()){
-            return  gameOfUser2.get();
+        if (gameOfUser2.isPresent()) {
+            return gameOfUser2.get();
         }
 
-        throw new RuntimeException("Game not found for user: "+user);
+        throw new RuntimeException("Game not found for user: " + user);
 
     }
-
 
 
     public Game addPointToOpponentMap(User pointGiver, Point point) {
@@ -152,19 +151,23 @@ public class GameService {
 
     private void isPointCollected(Double lat, Double lon, Set<Point> points) {
         points.stream().forEach(point -> {
-                    checkPointInRadius(point, lat, lon);
+                    boolean isPointCollected = checkPointInRadius(point, lat, lon);
+                    point.setCollected(isPointCollected);
+                    log.info("Is COLLECTED: " + isPointCollected);
                 }
         );
     }
 
-    private void checkPointInRadius(Point point, Double lat, Double lon) {
+    private boolean checkPointInRadius(Point point, Double lat, Double lon) {
 
         float dist = distFrom(point.getLatitude(), point.getLongitude(), lat, lon);
         log.info("Distance between: " + dist);
         if (dist < RADIUS_FROM_POINT) {
             point.setCollected(true);
+            return true;
         }
 
+        return false;
     }
 
     public static float distFrom(double lat1, double lng1, double lat2, double lng2) {
