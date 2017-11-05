@@ -17,6 +17,7 @@ public class CopernicusApiResponseDto {
 	public class Feature {
 		private Geometry geometry;
 		private Properties properties;
+		private List<FeatureInfo> featureInfo;
 	};
 
 	@Data
@@ -32,5 +33,11 @@ public class CopernicusApiResponseDto {
 
 		private Double gridCentreLon;
 		private Double gridCentreLat;
+	};
+	
+	@Data
+	public class FeatureInfo {
+		private String time;
+		private Double value;
 	};
 }
