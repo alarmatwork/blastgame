@@ -45,11 +45,13 @@ public class WikipediaApi {
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 
 		try {
-
+			
+			log.info("Wiki URL: " + targetURL);
 			ResponseEntity<WikipediaApiResponseDto> response = this.restTemplate.exchange(new URI(targetURL), HttpMethod.GET, entity, WikipediaApiResponseDto.class);
 
 			if (response.getStatusCode() == HttpStatus.OK) {
-
+				
+				log.info("Wiki response: " + response.getBody().toString());
 				if (response.getBody().getQuery() != null && response.getBody().getQuery().getPages() != null) {
 
 					List<WikiResponseDto> results = new ArrayList<WikiResponseDto>();
