@@ -4,16 +4,22 @@ import com.fitness.blast.UserNotFoundException;
 import com.fitness.blast.dao.Game;
 import com.fitness.blast.dao.Point;
 import com.fitness.blast.dao.User;
+import com.fitness.blast.integrations.WikipediaApi;
+import com.fitness.blast.integrations.wiki.dto.WikiResponseDto;
 import com.fitness.blast.service.GameService;
 import com.fitness.blast.service.UserService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -25,6 +31,9 @@ public class ApiController {
 
     @Autowired
     GameService gameService;
+    
+    @Autowired
+    private WikipediaApi wikipediaApi;
 
     @RequestMapping(value = "/user/register", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -93,4 +102,16 @@ public class ApiController {
         Game game = gameService.ping(user, latitude, longitude);
         return game.setSortingOwner(user);
     }
+    
+    
+    @RequestMapping(value = "/wikipedia", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<WikiResponseDto> wikipedia(
+            @ApiParam(value = "Latitude", required = true) @RequestParam(value = "latitude", defaultValue = "") Double latitude,
+            @ApiParam(value = "Longitude", required = true) @RequestParam(value = "longitude", defaultValue = "") Double longitude,
+            HttpServletRequest request) {
+
+		return this.wikipediaApi.getNearbyPOIs(latitude, longitude);
+
+	}
 }
