@@ -3,7 +3,13 @@ package com.fitness.blast.service;
 import com.fitness.blast.dao.Game;
 import com.fitness.blast.dao.Point;
 import com.fitness.blast.dao.User;
+import com.fitness.blast.integrations.CopernicusApiService;
+import com.fitness.blast.integrations.WikipediaApi;
+import com.fitness.blast.integrations.wiki.dto.WikiResponseDto;
+
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,6 +20,11 @@ public class GameService {
     public static final int RADIUS_FROM_POINT = 100;
     Set<Game> activeGames = new HashSet<>();
 
+    @Autowired
+    private WikipediaApi wikipediaApi;
+
+    @Autowired
+    private CopernicusApiService copernicusApiService;
 
     public Game registerGame(User user1, User user2) {
 
@@ -168,5 +179,31 @@ public class GameService {
 
         return dist;
     }
+    
+    
+	public String getPointMessage(double latitude, double longitude) {
+
+		StringBuilder descSB = new StringBuilder();
+
+		// try with wiki
+		List<WikiResponseDto> wikiResponse = this.wikipediaApi.getNearbyPOIs(latitude, longitude);
+		if (wikiResponse != null && wikiResponse.size() > 0) {
+
+			WikiResponseDto firstWiki = wikiResponse.get(0);
+			descSB.append(firstWiki.getTitle());
+		}
+
+		// try with copernicus
+		String copernicusUrbanResponse = this.copernicusApiService.getUrbanizationLayer(latitude, longitude);
+		if (copernicusUrbanResponse != null && copernicusUrbanResponse.length() > 2) {
+			descSB.append(copernicusUrbanResponse.trim());
+		}
+
+		if (descSB.length() > 1) {
+			return "Info: " + descSB.toString();
+		}
+
+		return "";
+	}
 
 }

@@ -14,19 +14,19 @@ public class CopernicusApiResponseDto {
 	private List<Feature> features;
 
 	@Data
-	public class Feature {
+	static public class Feature {
 		private Geometry geometry;
 		private Properties properties;
 		private List<FeatureInfo> featureInfo;
 	};
 
 	@Data
-	public class Geometry {
+	static public class Geometry {
 		private String type;
 	};
 
 	@Data
-	public class Properties {
+	static public class Properties {
 
 		private Integer iIndex;
 		private Integer jIndex;
@@ -36,7 +36,7 @@ public class CopernicusApiResponseDto {
 	};
 	
 	@Data
-	public class FeatureInfo {
+	static public class FeatureInfo {
 		private String time;
 		private Double value;
 	};

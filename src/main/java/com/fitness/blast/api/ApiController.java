@@ -27,6 +27,7 @@ import java.util.UUID;
 @Api(value = "api", tags = {"api"}, description = "User Api", produces = "application/json", consumes = "application/json")
 @Slf4j
 public class ApiController {
+	
     @Autowired
     UserService userService;
 
@@ -81,6 +82,7 @@ public class ApiController {
             HttpServletRequest request) {
 
         User user = userService.findUser(userId);
+        
         Point point = new Point(user, latitude, longitude);
         if (user == null){
             throw new UserNotFoundException("User not found: " + userId);
@@ -88,6 +90,9 @@ public class ApiController {
 
         point.setMessage("Urban area");
         gameService.addPointToOpponentMap(user, point);
+        
+        // add info to point
+		point.setMessage(this.gameService.getPointMessage(point.getLatitude(), point.getLongitude()));
 
         return point.getMessage();
     }
@@ -100,6 +105,7 @@ public class ApiController {
             @ApiParam(value = "Longitude", required = true) @RequestParam(value = "longitude", defaultValue = "") Double longitude,
 
             HttpServletRequest request) {
+    	
         log.info("Ping: "+userId+ " coordinates("+latitude+ ", "+ longitude+")");
         User user = userService.findUser(userId);
         if (user == null) {
@@ -124,15 +130,14 @@ public class ApiController {
 
 
 
-    @RequestMapping(value = "/info", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/copernicus", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String info(
+    public String copernicus(
             @ApiParam(value = "Latitude", required = true) @RequestParam(value = "latitude", defaultValue = "") Double latitude,
             @ApiParam(value = "Longitude", required = true) @RequestParam(value = "longitude", defaultValue = "") Double longitude,
             HttpServletRequest request) {
 
-        return this.copernicusApiService.getPointType(latitude, longitude);
-
+        return this.copernicusApiService.getUrbanizationLayer(latitude, longitude);
     }
 
 }
