@@ -1,5 +1,6 @@
 package com.fitness.blast.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
@@ -18,12 +19,18 @@ public class Game {
     private UUID id;
 
     @NonNull
+    @JsonIgnore
     private User user1;
+
     @NonNull
+    @JsonIgnore
     private User user2;
+
     @NonNull
+    @JsonIgnore
     private Set<Point> user1Points;
     @NonNull
+    @JsonIgnore
     private Set<Point> user2Points;
     @NonNull
     private boolean gameOver;
@@ -35,22 +42,33 @@ public class Game {
         return this;
     }
 
-    public Map<User, Set<Point>> getOrderedPoints(){
-        if (currentOwner == null){
-            return null;
-        }
+    public User getMe(){
+        return currentOwner;
+    }
 
-        LinkedHashMap<User, Set<Point>> userSetLinkedHashMap = new LinkedHashMap<>();
+    public User getOpponent(){
 
-        if(currentOwner.equals(user1)){
-            userSetLinkedHashMap.put(user1, user1Points);
-            userSetLinkedHashMap.put(user2, user2Points);
+        if (user1 != null && user1.equals(currentOwner)){
+            return user2;
         } else {
-            userSetLinkedHashMap.put(user2, user2Points);
-            userSetLinkedHashMap.put(user1, user1Points);
-
+            return user1;
         }
-            return userSetLinkedHashMap;
+    }
+
+    public Set<Point> getMyPoints(){
+        if (user1 != null && user1.equals(currentOwner)){
+            return user1Points;
+        } else {
+            return user2Points;
+        }
+    }
+
+    public Set<Point> getOpponentPoints(){
+        if (user1 != null && user1.equals(currentOwner)){
+            return user2Points;
+        } else {
+            return user1Points;
+        }
     }
 
     public Game(){
@@ -65,7 +83,6 @@ public class Game {
         if (isWaiting()) {
             return "...";
         }
-        return user1.getId().toString() + getUser2().getId().toString();
-
+        return user1.getId().toString() + user2.getId().toString();
     }
 }
